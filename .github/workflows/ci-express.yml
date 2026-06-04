@@ -11,6 +11,10 @@ on:
         required: false
         type: string
         default: "npm test"
+      test-integration:
+        required: false
+        type: boolean
+        default: false
 
 jobs:
   setup:
@@ -31,3 +35,10 @@ jobs:
 
       - name: Run tests
         run: ${{ inputs.test-command }}
+
+      - name: Run integration tests
+        if: ${{ inputs.test-integration }}
+        env:
+          STAGING_API_KEY: ${{ secrets.STAGING_API_KEY }}
+          STAGING_DATABASE_URL: ${{ secrets.STAGING_DATABASE_URL }}
+        run: npm run test:integration
