@@ -1,10 +1,19 @@
-name: CI Express
+name: Shared Node Setup
 
 on:
   workflow_call:
+    inputs:
+      node-version:
+        required: false
+        type: string
+        default: "20"
+      test-command:
+        required: false
+        type: string
+        default: "npm test"
 
 jobs:
-  ci-express:
+  setup:
     runs-on: ubuntu-latest
 
     steps:
@@ -14,9 +23,11 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: ${{ inputs.node-version }}
           cache: "npm"
 
       - name: Install dependencies
         run: npm ci
 
+      - name: Run tests
+        run: ${{ inputs.test-command }}
